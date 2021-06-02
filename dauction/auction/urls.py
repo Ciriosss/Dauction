@@ -9,4 +9,5 @@ urlpatterns = [
     path('newAuction/', views.newAuction, name="newAuction"),
     path('transactions/', views.transactions, name="transactions"),
     path('transaction/<str:tx>/', views.transactionDetail, name = "transactionDetail"),
+    path('auctionsFinished', views.auctionsFinished, name = "auctionsFinished")
 ]

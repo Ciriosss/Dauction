@@ -86,6 +86,14 @@ def transactionDetail(request,tx):
     transaction = Transaction.objects.get(tx = tx)
     return render(request, 'auction/transactionDetail.html', {'transaction': transaction})
 
+def auctionsFinished(request):
+    auctionsFinished = []
+    auctions = Auction.objects.all()
+    for auction in auctions:
+        if auction.is_expired() :
+            auctionsFinished.append(auction)
+    return render(request, 'auction/auctionsFinished.html', {'auctionsFinished':auctionsFinished})
+
 @background(schedule=60)
 def checkExpiration():
     auctions = Auction.objects.filter(jsonResult = {})

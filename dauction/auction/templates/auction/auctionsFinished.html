@@ -1,34 +1,23 @@
 {% extends "auction/base.html" %}
 {% block content %}
 
-
-<h3> Filter Items</h3>
-    <div class = "filter">
-
-        {% for category in categories%}
-        <a href = "{% url 'fiterByCategory' category=category %}"> {{category}} </a><br>
-        {% endfor %}
-    </div>
-    <br>
-<a href = "{% url 'auctionsFinished' %}"><h3>Auctions finished</h3></a>
-
     <center>
-    {% for item in items %}
+    {% for auction in auctionsFinished %}
         <br>
         <br>
         <div class="w3-main">
             <div class="courses-container">
                 <div class="course">
                     <div class="course-preview">
-                        <h6>{{ item.published}}</h6>
-                        <h2> {{ item.name}} </h2>
+                        <h6>{{ auction.item.published}}</h6>
+                        <h2> {{ auction.item.name}} </h2>
                     </div>
                     <div class="course-info">
-                        <h6>{{ item.seller }}</h6>
-                        <h4>{{ item.description|truncatewords:7}}</h4>
+                        <h6>{{ auction.item.seller }}</h6>
+                        <h4>{{ auction.item.description|truncatewords:7}}</h4>
                         <br>
-                        <a href="{% url 'fiterByCategory' category=item.category %}"><font color = #24252A>{{ item.category}} </font> <i class="fas fa-chevron-right"></i></a>
-                        <a href="{% url 'auction' pk=item.pk %}" class="card-link"><button class="btnn">See more</button></a>
+                        <a href="{% url 'fiterByCategory' category=auction.item.category %}"><font color = #24252A>{{ auction.item.category}} </font> <i class="fas fa-chevron-right"></i></a>
+                        <a href="{% url 'auction' pk=auction.item.pk %}" class="card-link"><button class="btnn">See more</button></a>
                     </div>
                 </div>
             </div>
