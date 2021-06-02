@@ -67,6 +67,14 @@ def newAuction(request):
 
         return render(request, "auction/newAuction.html")
 
+def transactions(request):
+    transactions = Transaction.objects.all().order_by('-date')
+    return render(request, 'auction/transactions.html', {"transactions": transactions})
+
+def transactionDetail(request,tx):
+    transaction = Transaction.objects.get(tx = tx)
+    return render(request, 'auction/transactionDetail.html', {'transaction': transaction})
+
 @background(schedule=60)
 def checkExpiration():
     auctions = Auction.objects.filter(jsonResult = {})
@@ -76,8 +84,8 @@ def checkExpiration():
             address = winnerBid.address
             auction.winner = Account.objects.get(address=address)
 
-            transferETH(auction.winner,auction.selleraddress,winnerBid.amount)
-            Transaction.objects.create()
+            tx = transferETH(auction.winner,auction.selleraddress,winnerBid.amount)
+            Transaction.objects.create(addressFrom = auction.winner.address,addressTo = auction.selleraddress, amount = winnerBid.amount,tx=tx )
 
             publication = str(auction.published)
             expiration = str(auction.expiration)

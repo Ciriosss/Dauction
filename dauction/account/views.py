@@ -39,3 +39,4 @@ def setUpAccount(request):
     else:
         form = SetUpAccount()
     return render(request, 'account/setUpAccount.html', {"form" : form})
+

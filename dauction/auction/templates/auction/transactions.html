@@ -1,0 +1,30 @@
+{% extends "auction/base.html" %}
+{% block content %}
+<table>
+
+    <tr>
+        <th>From</th>
+        <th>Amount</th>
+        <th>To</th>
+        <th>More</th>
+    </tr>
+
+
+    {% for transaction in transactions %}
+
+    <tr>
+        <td><article class="media content-section"> {{ transaction.addressFrom}} </article></td>
+        <td><article class="media content-section"> {{ transaction.amount}} </article></td>
+        <td><article class="media content-section"> {{ transaction.addressTo}} </article></td>
+        <td><article class="media content-section">
+            <a href="{% url 'transactionDetail' tx=transaction.tx %}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-arrow-up-right-circle-fill" viewBox="0 0 16 16">
+                <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8zm5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707l-4.096 4.096z"/>
+            </svg>
+            </a>
+            </article></td>
+    </tr>
+
+    {% endfor %}
+</table>
+{% endblock %}

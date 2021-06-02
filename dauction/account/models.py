@@ -8,9 +8,9 @@ class Account(AbstractUser):
 
 
 class Transaction(models.Model):
-    addressFrom = models.TextField(max_length=50)
-    addressTo = models.TextField(max_length=50)
+    addressFrom = models.CharField(max_length=50)
+    addressTo = models.CharField(max_length=50)
     amount = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
-    tx = models.TextField(max_length=100)
+    tx = models.CharField(max_length=100)
 
