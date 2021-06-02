@@ -1,0 +1,72 @@
+{% extends "auction/base.html" %}
+{% load static%}
+
+
+{% block scripts %}
+    <script src = "{% static 'multiForm.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+{% if x %}
+    {{ x }}
+{% endif %}
+<!-- MultiStep Form -->
+<div class="row">
+    <div>
+        <form id="msform" action = "{% url 'newAuction' %}"  method="POST">
+            {% csrf_token %}
+            <!-- progressbar -->
+            <ul id="progressbar">
+                <li class="active">Item</li>
+                <li>Auction</li>
+                <li>User Detail</li>
+            </ul>
+
+            <!-- fieldsets -->
+            <fieldset>
+                <h2 class="fs-title">Item</h2>
+                <h3 class="fs-subtitle">Write some detail about your product</h3>
+
+                <label for="category"><font color="black">Choose a categoty:</font></label>
+                <select id="category" name = 'category'>
+                    <option value="TC" name = 'category'>Tecnology</option>
+                    <option value="CT" name = 'category'>Clothes</option>
+                    <option value="RE" name = 'category'>Real Estate</option>
+                    <option value="AT" name = 'category'>Antiques</option>
+                    <option value="SP" name = 'category'>Sport</option>
+                    <option value="OT" name = 'category'>Other</option>
+                </select>
+                <input type="text" name="name" placeholder=" Product name"/>
+                <textarea  name="description" placeholder=" Description"></textarea>
+                <input type="button" name="next" class="next action-button" value="Next"/>
+            </fieldset>
+
+            <fieldset>
+                <h2 class="fs-title">Auction</h2>
+                <h3 class="fs-subtitle">Indicates the details of the auction</h3>
+
+                <input type="number" name="starterPrice" placeholder="Starter price(ETH)"/>
+                <input type="datetime-local" name = "expiration">
+                <input type="button" name="next" class="next action-button" value="Next"/>
+            </fieldset>
+
+            <fieldset>
+                <h2 class="fs-title">Payment & contacts</h2>
+                <h3 class="fs-subtitle">Write the ethereum address to which the amount will be credited</h3>
+
+                <input type="text" name="email" placeholder="Email"/>
+                <input type="text" name="address" placeholder="ETH address"/><br>
+
+                <button class="btnn" type="submit">Submit</button>
+
+
+            </fieldset>
+
+        </form>
+
+    </div>
+</div>
+
+
+{% endblock %}

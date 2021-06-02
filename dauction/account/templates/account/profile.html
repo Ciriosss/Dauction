@@ -1,0 +1,36 @@
+{% extends 'auction/base.html' %}
+{% block content %}
+        <h1> Profile of {{ profile.username }} </h1> <br>
+    <legend class = 'border-bottom mb-4'><h4> <font color="#f15050"> Personal info </font></h4> </legend>
+        {% if account.address %}
+            <div class="media-body">
+                <strong><font color = "ee0979">FIRST NAME :</font> <font color = "grey">{{ account.first_name }}</font></strong><br>
+                <strong><font color = "black">LAST NAME :</font> <font color = "grey"> {{ account.last_name}}</font></strong><br>
+                <strong><font color = "black">EMAIL : </font><font color = "grey"></font> {{ account.email }}</strong><br>
+                <strong><font color = "black">ADDRESS : </font><font color = "grey">{{account.address}}</font></strong><br>
+                <strong><font color = "black">ETHER :</font> <font color = "grey"> {{ balanceEth }} ETH </font></strong><br>
+                <strong><font color = "black">HAMSA :</font> <font color = "grey"> {{ balanceHMS}} HMS</font> </strong><br>
+            </div>
+            <br>
+            <br>
+
+            <a href="{% url 'setUpAccount' %}" class="btn btn-primary">Change ethereum account</a>
+            <br>
+            <br>
+        {% else %}
+        <div class="media-body">
+            <strong><font color = "black">FIRST NAME :</font> <font color = "grey">{{ account.first_name }}</font></strong><br>
+            <strong><font color = "black">LAST NAME :</font> <font color = "grey"> {{ account.last_name}}</font></strong><br>
+            <strong><font color = "black">EMAIL : </font><font color = "grey"></font> {{ account.email }}</strong><br>
+            <strong><font color = "black">ADDRESS : </font><font color = "grey"> Unavailable </font></strong><br>
+            <strong><font color = "black">ETHER :</font> <font color = "grey"> Unavailable </font></strong><br>
+            <strong><font color = "black">HAMSA :</font> <font color = "grey"> Unavailable </font> </strong><br>
+        </div>
+        <br>
+        <br>
+
+        <h5> Do you have an ethereum account? import it now!</h5>
+        <a href="{% url 'setUpAccount' %}" class="btn btn-primary">Set up my account</a>
+
+    {% endif %}
+{% endblock %}

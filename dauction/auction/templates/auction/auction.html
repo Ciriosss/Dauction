@@ -1,0 +1,67 @@
+{% extends "auction/base.html" %}
+{% load crispy_forms_tags %}
+{% load static%}
+
+{% block scripts %}
+    <script src = "{% static 'script.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<br>
+<h4>
+    <div>
+        <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> ITEM DETAIL </font></h4> </legend>
+           <div class = "attribute">  Name :  </div> {{auction.item.name}} <br> <br>
+           <div class = "attribute">Description : </div> {{auction.item.description}} <br> <br>
+
+    </div>
+
+
+    <div>
+        <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> AUCTION </font></h4> </legend>
+
+        <div class = "attribute"> Starter Price :  </div> <br> {{auction.starterPrice}} <br> <br>
+        <div class = "attribute"> Publish Date : </div>{{auction.published|date:"M d,Y H:m:s"}} <br> <br>
+        <div class = "attribute"  > Expiration Date : </div><div id = "expiration"> {{auction.expiration|date:"M d,Y H:m:s"}} </div> <br> <br>
+
+        <h5>This auction will expire in </h5>
+        <h2><div id = "remaining" class = "blue"> </div> </h2> <br> <br>
+    </div>
+
+
+
+    <div>
+        <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> BIDS </font></h4> </legend>
+
+        <form method = 'POST'>
+            {% csrf_token %}
+            <fieldset class = 'form-group'>
+                    {{ form|crispy }}
+            </fieldset>
+            <br>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Make a bid</button>
+            </div>
+        </form>
+
+        <table>
+            <tr>
+                <th>Address</th>
+                <th>Amount</th>
+                <th>Datetime</th>
+            </tr>
+
+                {% for bid in bids %}
+                    <tr>
+                        <td> {{ bid.address}} </td>
+                        <td> {{ bid.amount}} </td>
+                        <td> {{ bid.date |date:"M d,Y H:m:s"}} </td>
+                    </tr>
+                {% endfor %}
+
+        </table>
+
+    </div>
+</h4>
+
+{% endblock %}
