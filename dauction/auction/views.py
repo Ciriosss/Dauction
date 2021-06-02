@@ -65,10 +65,11 @@ def newAuction(request):
         starterPrice = request.POST.get('starterPrice')
         expiration = request.POST.get('expiration')
         address = request.POST.get('address')
+        image = request.POST.get('image')
 
         seller = Account.objects.get(address = address)
 
-        item = Item.objects.create(seller = account, category = category, name = name, description = description)
+        item = Item.objects.create(seller = account, category = category, name = name, description = description, image=image)
         Auction.objects.create(item = item, starterPrice = starterPrice,expiration = expiration, selleraddress = address, winner = seller)
 
         messages.success(request, 'Auction correctly registred')

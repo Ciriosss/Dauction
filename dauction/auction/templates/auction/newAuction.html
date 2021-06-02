@@ -14,7 +14,7 @@
 <!-- MultiStep Form -->
 <div class="row">
     <div>
-        <form id="msform" action = "{% url 'newAuction' %}"  method="POST">
+        <form id="msform" action = "{% url 'newAuction' %}"  method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <!-- progressbar -->
             <ul id="progressbar">
@@ -39,6 +39,7 @@
                 </select>
                 <input type="text" name="name" placeholder=" Product name"/>
                 <textarea  name="description" placeholder=" Description"></textarea>
+                <input type = "file", name="image">
                 <input type="button" name="next" class="next action-button" value="Next"/>
             </fieldset>
 
