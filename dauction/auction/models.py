@@ -11,12 +11,12 @@ import hashlib
 class Item(models.Model):
     seller = models.ForeignKey(Account, on_delete=models.CASCADE)
     CATEGORIES = [
-        ('Tecnology','TC'),
-        ('Clothes','CT'),
-        ('Real estate','RE'),
-        ('Antiques','AT'),
-        ('Sport','SP'),
-        ('Other', 'OT'),
+        ('TC','Tecnology'),
+        ('CT','Clothes'),
+        ('RE','Real estate'),
+        ('AT','Antiques'),
+        ('SP','Sport'),
+        ('OT','Other' ),
     ]
     category = models.CharField(choices=CATEGORIES,max_length=15, default='Tecnology')
     name = models.CharField(max_length=30)

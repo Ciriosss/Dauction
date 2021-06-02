@@ -14,7 +14,11 @@ def home(request):
     return render(request, "auction/home.html", {})
 
 def items(request):
-    items = Item.objects.all()
+    items = []
+    auctions = Auction.objects.all()
+    for auction in auctions:
+        if not auction.is_expired() :
+            items.append(Item.objects.get(id = auction.item.id))
     return render(request, "auction/items.html", {'items' : items})
 
 def auction(request, pk):
