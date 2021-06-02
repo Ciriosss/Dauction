@@ -14,12 +14,18 @@ def home(request):
     return render(request, "auction/home.html", {})
 
 def items(request):
+    categories =[ 'Tecnology','Clothes' ,'Real estate','Antiques','Sport','Other']
     items = []
     auctions = Auction.objects.all()
     for auction in auctions:
         if not auction.is_expired() :
             items.append(Item.objects.get(id = auction.item.id))
-    return render(request, "auction/items.html", {'items' : items})
+    return render(request, "auction/items.html", {'items' : items, 'categories':categories})
+
+def fiterByCategory(request, category):
+    categories = ['Tecnology', 'Clothes', 'Real estate', 'Antiques', 'Sport', 'Other']
+    items = Item.objects.filter(category = category)
+    return render(request, "auction/items.html", {'items': items, 'categories': categories})
 
 def auction(request, pk):
     item = Item.objects.get(pk = pk)

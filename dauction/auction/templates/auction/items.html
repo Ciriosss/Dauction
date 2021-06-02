@@ -1,5 +1,15 @@
 {% extends "auction/base.html" %}
 {% block content %}
+
+
+<h3> Filter Items</h3>
+    <div class = "filter">
+
+        {% for category in categories%}
+        <a href = "{% url 'fiterByCategory' category=category %}"> {{category}} </a><br>
+        {% endfor %}
+    </div>
+
     <center>
     {% for item in items %}
         <br>
@@ -15,7 +25,7 @@
                         <h6>{{ item.seller }}</h6>
                         <h4>{{ item.description|truncatewords:7}}</h4>
                         <br>
-                        <a href="#"><font color = #24252A>{{ item.category}} </font> <i class="fas fa-chevron-right"></i></a>
+                        <a href="{% url 'fiterByCategory' category=item.category %}"><font color = #24252A>{{ item.category}} </font> <i class="fas fa-chevron-right"></i></a>
                         <a href="{% url 'auction' pk=item.pk %}" class="card-link"><button class="btnn">See more</button></a>
                     </div>
                 </div>
