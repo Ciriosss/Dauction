@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import AccountRegisterForm, SetUpAccount
 from auction.blockchain import newAccount
+from django.contrib.auth.decorators import login_required
 
 def register( request):
 
@@ -16,9 +17,10 @@ def register( request):
         form = AccountRegisterForm()
     return render(request, 'account/register.html', {'form': form})
 
+@login_required(login_url='login')
 def profile(request):
     account = request.user
-    return render(request, 'account/profile.html', {'account' : account})
+    return render(request, 'account/profile.html', {'account': account})
 
 def setUpAccount(request):
 

@@ -12,7 +12,13 @@
 </head>
 <body>
 
-
+    {% if massages %}
+          {% for message in messages%}
+               <div class="alert alert-{{ message.tags}}" role="alert">
+                   {{ message }}
+               </div>
+          {% endfor%}
+    {% endif %}
 
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
       <header class="masthead mb-auto">
@@ -38,7 +44,7 @@
 
 {% block content %}
 {% endblock %}
-
+<a href="{% url 'logout' %}" class="card-link"><button class="btnn">Logout</button></a>
 <footer class="mastfoot mt-auto">
         <div class="inner">
           <p>Created by Ciriello Domenico</a>.</p>

@@ -4,11 +4,13 @@ from django.contrib import messages
 from account.forms import newBid
 from background_task import background
 import json
-from datetime import datetime
+from django.contrib.auth.decorators import login_required
 from account.models import Account, Transaction
 from .blockchain import transferETH, signedAuction
 import hashlib
+import redis
 
+client = redis.StrictRedis(host='127.0.0.1', port=6379, password='', db=0)
 
 def home(request):
     return render(request, "auction/home.html", {})
@@ -27,6 +29,7 @@ def fiterByCategory(request, category):
     items = Item.objects.filter(category = category)
     return render(request, "auction/items.html", {'items': items, 'categories': categories})
 
+@login_required(login_url='login')
 def auction(request, pk):
     item = Item.objects.get(pk = pk)
     auction = Auction.objects.get(item =item)
@@ -48,12 +51,16 @@ def auction(request, pk):
                     return redirect('items')
 
             Bid.objects.create(auction=auction, address=account.address, amount=amount)
+            client.rpush(f"{account.address}", f"{amount}")
+
             messages.success(request, 'Bid correctly registred')
             return redirect('items')
 
     else:
         form = newBid()
     return render(request, "auction/auction.html", {'auction': auction, 'bids':bids, 'form':form})
+
+@login_required(login_url='login')
 
 def newAuction(request):
 
@@ -76,7 +83,7 @@ def newAuction(request):
         return redirect('items')
     else:
 
-        return render(request, "auction/newAuction.html")
+        return render(request, "auction/newAuction.html",{'account':account})
 
 def transactions(request):
     transactions = Transaction.objects.all().order_by('-date')
@@ -85,6 +92,7 @@ def transactions(request):
 def transactionDetail(request,tx):
     transaction = Transaction.objects.get(tx = tx)
     return render(request, 'auction/transactionDetail.html', {'transaction': transaction})
+
 
 def auctionsFinished(request):
     auctionsFinished = []
