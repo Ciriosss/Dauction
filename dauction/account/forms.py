@@ -1,5 +1,5 @@
 from django import forms
-from .models import Account
+from .models import Account, Recension
 from auction.models import Bid
 from django.contrib.auth.forms import UserCreationForm
 
@@ -27,3 +27,4 @@ class SetUpAccount(forms.ModelForm):
     class Meta :
         model = Account
         fields = ['privateKey']
+

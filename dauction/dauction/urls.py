@@ -27,6 +27,7 @@ urlpatterns = [
     path('login', auth_views.LoginView.as_view(template_name = 'account/login.html'), name = 'login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='account/logout.html'), name='logout'),
     path('profile/', account_views.profile, name = 'profile'),
+    path('account/<int:pk>/', account_views.accountDetail, name = 'accountDetail'),
     path('setUpAccount/', account_views.setUpAccount, name = 'setUpAccount'),
     path('home', include('auction.urls')),
     path('', account_views.register, name='register'),

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from . models import Account, Recension
 from .forms import AccountRegisterForm, SetUpAccount
 from auction.blockchain import newAccount
 from django.contrib.auth.decorators import login_required
@@ -21,6 +22,16 @@ def register( request):
 def profile(request):
     account = request.user
     return render(request, 'account/profile.html', {'account': account})
+
+def accountDetail(request, pk):
+    account = Account.objects.get(pk = pk)
+    recensions = Recension.objects.filter(to = account)
+    if request.method == 'POST':
+        recension = request.POST.get('recension')
+        rating = request.POST.get('rating')
+
+        Recension.objects.create(author = request.user, recension = recension, rating = rating, to = account)
+    return render(request, 'account/accountDetail.html', {'account': account, 'recensions' : recensions})
 
 def setUpAccount(request):
 

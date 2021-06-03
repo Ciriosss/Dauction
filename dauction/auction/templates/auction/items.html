@@ -24,7 +24,7 @@
                         <h2> {{ item.name}} </h2>
                     </div>
                     <div class="course-info">
-                        <h6>{{ item.seller }}</h6>
+                        <a style="color : rgba(0, 136, 169, 1)" href = "{% url 'accountDetail' pk=item.seller.pk %}"><h6>{{ item.seller }}</h6></a>
                         <h4>{{ item.description|truncatewords:7}}</h4>
                         <br>
                         <a href="{% url 'fiterByCategory' category=item.category %}"><font color = #24252A>{{ item.category}} </font> <i class="fas fa-chevron-right"></i></a>

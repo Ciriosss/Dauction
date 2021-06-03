@@ -14,3 +14,8 @@ class Transaction(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     tx = models.CharField(max_length=100)
 
+class Recension(models.Model):
+    author = models.ForeignKey(Account,on_delete=models.CASCADE, related_name='author')
+    recension = models.TextField(max_length=500)
+    rating = models.IntegerField()
+    to = models.ForeignKey(Account,on_delete=models.CASCADE, related_name='to')

@@ -1,0 +1,47 @@
+{% extends 'auction/base.html' %}
+{% block content %}
+{% load static%}
+
+{% block scripts %}
+    <script src = "{% static 'range.js' %}" defer></script>
+{% endblock %}
+
+<h1> Profile of {{ account.username }} </h1> <br>
+    <legend class = 'border-bottom mb-4'><h4> <font color="#f15050"> Personal info </font></h4> </legend>
+            <div class="media-body">
+                <strong><font color = "ee0979">FIRST NAME :</font> <font color = "grey">{{ account.first_name }}</font></strong><br>
+                <strong><font color = "black">LAST NAME :</font> <font color = "grey"> {{ account.last_name}}</font></strong><br>
+                <strong><font color = "black">EMAIL : </font><font color = "grey"></font> {{ account.email }}</strong><br>
+                <strong><font color = "black">ADDRESS : </font><font color = "grey">{{account.address}}</font></strong><br>
+                <strong><font color = "black">ETHER :</font> <font color = "grey"> {{ balanceEth }} ETH </font></strong><br>
+                <strong><font color = "black">HAMSA :</font> <font color = "grey"> {{ balanceHMS}} HMS</font> </strong><br>
+            </div>
+            <br>
+            <br>
+<form id="msform" action = "{% url 'accountDetail' pk=account.pk%}"  method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+       <!-- fieldsets -->
+            <fieldset>
+                <h2 class="fs-title">Recension</h2>
+                <h3 class="fs-subtitle">Help other User to know something about sellers</h3>
+
+                <textarea  name="recension" placeholder="Write here your recension"></textarea>
+
+                <div class="range-wrap">
+                  <input name = "rating "type="range" class="range" min="0" max="5">
+                  <output style="color : rgba(0, 136, 169, 1)" class="bubble"></output>
+                </div>
+
+
+                 <button class="btnn" type="submit">Publish</button>
+            </fieldset>
+</form> <br> <br>
+
+
+{% for recension in recensions %}
+    {{recension.author}} <br>
+    {{recension.rating}} <br>
+    {{recension.recension}} <br>
+{% endfor %}
+{% endblock %}
