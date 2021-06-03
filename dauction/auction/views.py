@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Item, Auction, Bid
+from .models import Item, Auction, Bid, Comment
 from django.contrib import messages
-from account.forms import newBid
+from account.forms import newBid, newComment
 from background_task import background
 import json
 from django.contrib.auth.decorators import login_required
@@ -35,11 +35,12 @@ def auction(request, pk):
     auction = Auction.objects.get(item =item)
     bids = Bid.objects.filter(auction = auction).order_by('-date')
     account = request.user
-
+    comments = Comment.objects.filter(auction = auction)
     if request.method == 'POST':
-        form = newBid(request.POST)
-        if form.is_valid():
-            amount = form.cleaned_data.get('amount')
+        bidForm = newBid(request.POST)
+
+        if bidForm.is_valid():
+            amount = bidForm.cleaned_data.get('amount')
             lastBid = Bid.objects.filter(auction = auction).last()
             if lastBid:
                 if amount < lastBid.amount:
@@ -56,12 +57,20 @@ def auction(request, pk):
             messages.success(request, 'Bid correctly registred')
             return redirect('items')
 
+        commentForm = newComment(request.POST)
+        if commentForm.is_valid():
+            comment = commentForm.cleaned_data.get('comment')
+
+
+            Comment.objects.create(author = account,auction=auction, comment = comment)
+            messages.success(request, 'Bid correctly registred')
+            return redirect('items')
     else:
-        form = newBid()
-    return render(request, "auction/auction.html", {'auction': auction, 'bids':bids, 'form':form})
+        bidForm = newBid()
+        commentForm = newComment()
+    return render(request, "auction/auction.html", {'auction': auction, 'bids':bids, 'bidForm':bidForm, 'commentForm':commentForm, 'comments': comments})
 
 @login_required(login_url='login')
-
 def newAuction(request):
 
     account = request.user

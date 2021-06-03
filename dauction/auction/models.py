@@ -51,3 +51,8 @@ class Bid(models.Model):
     address = models.CharField(max_length=50, default="")
     amount = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
+
+class Comment(models.Model):
+    author = models.ForeignKey(Account, on_delete=models.CASCADE)
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
+    comment = models.TextField(max_length=500)

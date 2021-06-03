@@ -1,5 +1,6 @@
 from django import forms
-from .models import Account, Recension
+from .models import Account
+from auction.models import Comment
 from auction.models import Bid
 from django.contrib.auth.forms import UserCreationForm
 
@@ -27,4 +28,12 @@ class SetUpAccount(forms.ModelForm):
     class Meta :
         model = Account
         fields = ['privateKey']
+
+class newComment(forms.ModelForm):
+    comment = forms.Textarea()
+
+    class Meta :
+        model = Comment
+        fields = ['comment']
+
 

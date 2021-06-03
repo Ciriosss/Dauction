@@ -39,7 +39,7 @@
             <form method = 'POST'>
                 {% csrf_token %}
                 <fieldset class = 'form-group'>
-                        {{ form|crispy }}
+                        {{ bidForm|crispy }}
                 </fieldset>
                 <br>
                 <div class="form-group">
@@ -73,7 +73,22 @@
 
 
     </div>
+    <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> COMMENTS </font></h4> </legend>
+            <form method = 'POST'>
+                {% csrf_token %}
+                <fieldset class = 'form-group'>
+                        {{ commentForm|crispy }}
+                </fieldset>
+                <br>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Publish comment</button>
+                </div>
+            </form>
 
+    {% for comment in comments%}
+        <h1>{{comment.author}}</h1>
+        <p>{{comment.comment}}</p>
+    {% endfor %}
 
 </h4>
 
