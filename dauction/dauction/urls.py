@@ -29,7 +29,8 @@ urlpatterns = [
     path('profile/', account_views.profile, name = 'profile'),
     path('account/<int:pk>/', account_views.accountDetail, name = 'accountDetail'),
     path('setUpAccount/', account_views.setUpAccount, name = 'setUpAccount'),
-    path('home', include('auction.urls')),
+    path('bio/', account_views.bio, name = 'bio'),
+    path('home/', include('auction.urls')),
     path('', account_views.register, name='register'),
 
 

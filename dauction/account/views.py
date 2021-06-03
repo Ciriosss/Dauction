@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from . models import Account, Recension
-from .forms import AccountRegisterForm, SetUpAccount
+from .forms import AccountRegisterForm, SetUpAccount, newBio
 from auction.blockchain import newAccount
 from django.contrib.auth.decorators import login_required
 
@@ -52,4 +52,18 @@ def setUpAccount(request):
     else:
         form = SetUpAccount()
     return render(request, 'account/setUpAccount.html', {"form" : form})
+
+def bio(request):
+
+    account = request.user
+    if request.method == 'POST':
+        form = newBio(request.POST)
+        if form.is_valid():
+            bio = form.cleaned_data.get('bio')
+            account.bio = bio
+            account.save()
+            return redirect('profile')
+    else:
+        form = newBio()
+    return render(request, 'account/bio.html', {"form" : form })
 

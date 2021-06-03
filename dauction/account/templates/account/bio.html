@@ -1,0 +1,18 @@
+{% extends "auction/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> BIO </font></h4> </legend>
+            <form method = 'POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class = 'form-group'>
+                        {{ form.media }}
+                        {{ form|safe }}
+                </fieldset>
+                <br>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Save bio</button>
+                </div>
+            </form>
+
+{% endblock %}

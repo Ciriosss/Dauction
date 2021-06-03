@@ -1,11 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from ckeditor.fields import RichTextField
 
 class Account(AbstractUser):
     address = models.CharField(max_length=50, default="")
     encrypt = models.TextField(max_length=5000, default="")
-
+    bio = RichTextField(blank = True, null = True)
 
 class Transaction(models.Model):
     addressFrom = models.CharField(max_length=50)

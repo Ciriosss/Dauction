@@ -36,4 +36,11 @@ class newComment(forms.ModelForm):
         model = Comment
         fields = ['comment']
 
+class newBio(forms.ModelForm):
+    bio = forms.Textarea()
+
+    class Meta :
+        model = Account
+        fields = ['bio']
+
 
