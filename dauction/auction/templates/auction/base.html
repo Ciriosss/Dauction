@@ -29,6 +29,7 @@
             <a class="nav-link active" href="{% url 'profile'%}">Profile</a>
             <a class="nav-link active" href="{% url 'newAuction'%}">New auction</a>
             <a class="nav-link active" href="{% url 'transactions'%}">Transactions</a>
+              <a href="{% url 'logout' %}" class="card-link" id="logout"><button class="btnn">Logout</button></a>
           </nav>
         </div>
       </header>
@@ -44,7 +45,7 @@
 
 {% block content %}
 {% endblock %}
-<a href="{% url 'logout' %}" class="card-link"><button class="btnn">Logout</button></a>
+<a href="{% url 'logout' %}" class="card-link" id="logout"><button class="btnn">Logout</button></a>
 <footer class="mastfoot mt-auto">
         <div class="inner">
           <p>Created by Ciriello Domenico</a>.</p>
