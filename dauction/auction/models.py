@@ -56,4 +56,4 @@ class Comment(models.Model):
     author = models.ForeignKey(Account, on_delete=models.CASCADE)
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
     comment = models.TextField(max_length=500)
-    date = models.DateTimeField(default=now())
+    date = models.DateTimeField(auto_now_add=True)

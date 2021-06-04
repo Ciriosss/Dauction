@@ -92,7 +92,8 @@
         </table>
         {% else %}
         <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> DATA</font></h4> </legend>
-            <div class = "attribute">  Json Result :  </div> {{auction.jsonResult}} <br> <br>
+            <div class = "attribute">  Json Result : </div> {{auction.jsonResult}}
+        <br> <br>
             <div class = "attribute">  TxId :  </div> {{auction.txId}} <br> <br>
              <br>
              <br>
@@ -113,23 +114,26 @@
                 </div>
             </form>
         {% endif %}
-    {% for comment in comments%}
-<ul class="list-group mb-3">
-    <li class="list-group-item d-flex justify-content-between lh-condensed">
-        <div>
-            <a href="{% url 'accountDetail' pk=comment.author.pk %}" ><h6 class="my-0" style="color : ee0979">{{comment.author}}</h6></a>
-            <small class="text-muted">{{recension.date}}</small>
-        </div>
-        <span class="text-muted"> {{comment.date}}</span>
-    </li>
-    <li class="list-group-item d-flex justify-content-between lh-condensed">
-        <div>
-            <h6 class="my-0">{{comment.comment}}</h6>
-        </div>
-    </li>
-</ul>
-{% endfor %}
-
+    {% if comments%}
+        {% for comment in comments%}
+    <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <a href="{% url 'accountDetail' pk=comment.author.pk %}" ><h6 class="my-0" style="color : ee0979">{{comment.author}}</h6></a>
+                <small class="text-muted">{{recension.date}}</small>
+            </div>
+            <span class="text-muted"> {{comment.date}}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">{{comment.comment}}</h6>
+            </div>
+        </li>
+    </ul>
+    {% endfor %}
+    {% else %}
+        <h5>This auction has no comments</h5>
+    {% endif %}
 </h4>
 
 {% endblock %}

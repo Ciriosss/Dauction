@@ -20,4 +20,4 @@ class Recension(models.Model):
     recension = models.TextField(max_length=500)
     rating = models.IntegerField()
     to = models.ForeignKey(Account,on_delete=models.CASCADE, related_name='to')
-    date = models.DateTimeField(default=now())
+    date = models.DateTimeField(auto_now_add=True)
