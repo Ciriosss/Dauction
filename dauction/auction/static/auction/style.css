@@ -18,7 +18,9 @@ a:hover {
   background-color: #ee0979;
   border: .05rem solid #fff;
 }
-
+th{
+    color: #ee0979;
+}
 
 /*
  * Base structure
@@ -100,9 +102,6 @@ body {
   padding: .75rem 1.25rem;
   font-weight: 700;
 }
-
-
-
 
 .w3-sidebar {
   z-index: 3;

@@ -6,15 +6,12 @@
     <script src = "{% static 'range.js' %}" defer></script>
 {% endblock %}
 
-<h1> Profile of {{ account.username }} </h1> <br>
-    <legend class = 'border-bottom mb-4'><h4> <font color="#f15050"> Personal info </font></h4> </legend>
+    <legend class = 'border-bottom mb-4' style="color : rgba(0, 136, 169, 1)"><h4>  Profile of {{ account.username }}</h4> </legend>
             <div class="media-body">
-                <strong><font color = "ee0979">FIRST NAME :</font> <font color = "grey">{{ account.first_name }}</font></strong><br>
-                <strong><font color = "black">LAST NAME :</font> <font color = "grey"> {{ account.last_name}}</font></strong><br>
-                <strong><font color = "black">EMAIL : </font><font color = "grey"></font> {{ account.email }}</strong><br>
-                <strong><font color = "black">ADDRESS : </font><font color = "grey">{{account.address}}</font></strong><br>
-                <strong><font color = "black">ETHER :</font> <font color = "grey"> {{ balanceEth }} ETH </font></strong><br>
-                <strong><font color = "black">HAMSA :</font> <font color = "grey"> {{ balanceHMS}} HMS</font> </strong><br>
+                <strong><font color = "ee0979">FIRST NAME :</font> {{ account.first_name }}</strong><br>
+                <strong><font color = "ee0979">LAST NAME :</font>  {{ account.last_name}} </strong><br>
+                <strong><font color = "ee0979">EMAIL : </font> {{ account.email }}</strong><br>
+                <strong><font color = "ee0979">ADDRESS : </font>{{account.address}}</strong><br>
             </div>
             <br>
             <br>
@@ -38,10 +35,23 @@
             </fieldset>
 </form> <br> <br>
 
+<legend class = 'border-bottom mb-4' style="color : rgba(0, 136, 169, 1)"><h4> Other recensions</h4> </legend>
+
 
 {% for recension in recensions %}
-    {{recension.author}} <br>
-    {{recension.rating}} <br>
-    {{recension.recension}} <br>
+<ul class="list-group mb-3">
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+            <a href="{% url 'accountDetail' pk=recension.author.pk %}" ><h6 class="my-0" style="color : ee0979">{{recension.author}}</h6></a>
+            <small class="text-muted">{{recension.date}}</small>
+        </div>
+        <span class="text-muted"> {{recension.rating}}</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+            <h6 class="my-0">{{recension.recension}}</h6>
+        </div>
+    </li>
+</ul>
 {% endfor %}
 {% endblock %}

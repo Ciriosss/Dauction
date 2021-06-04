@@ -1,17 +1,27 @@
 {% extends "auction/base.html" %}
 {% block content %}
 
-
+<br>
 <h3> Filter Items</h3>
-    <div class = "filter">
+<ul class="list-group mb-3">
+    {% for category in categories%}
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+            <a style = "color : rgba(0, 136, 169, 1)" href= "{% url 'fiterByCategory' category=category %}"><h6 class="my-0">{{category}}</h6></a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
 
-        {% for category in categories%}
-        <a href = "{% url 'fiterByCategory' category=category %}"> {{category}} </a><br>
-        {% endfor %}
-    </div>
-    <br>
-<a href = "{% url 'auctionsFinished' %}"><h3>Auctions finished</h3></a>
+<ul class="list-group mb-3">
 
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+            <a style = "color : rgba(0, 136, 169, 1)" href = "{% url 'auctionsFinished' %}"><h6>Auctions finished</h6></a>
+        </div>
+    </li>
+
+</ul>
     <center>
     {% for item in items %}
         <br>
@@ -35,28 +45,32 @@
         </div>
     {% endfor %}
 <br>
+
+
   <!-- Pagination -->
-<nav aria-label="Page navigation example">
-  <ul class="pagination">
-      {% if items.has_previous %}
-    <li class="page-item">
-      <a class="page-link" href="?page={{items.previous_page_number}}" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-        <span class="sr-only">Previous</span>
-      </a>
-    </li>
-      {%endif%}
-    <li class="page-item"><a class="page-link" href="#">{{items.number}}</a></li>
-      {% if items.has_next %}
-    <li class="page-item">
-      <a class="page-link" href="?page={{items.next_page_number}}" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-        <span class="sr-only">Next</span>
-      </a>
-    </li>
-       {%endif%}
-  </ul>
-</nav>
+<div class="text-center" >
+    <nav aria-label="Page navigation example" >
+      <ul class="pagination" style = "object-position: center;">
+          {% if items.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{items.previous_page_number}}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+          {%endif%}
+        <li class="page-item"><a class="page-link" href="#">{{items.number}}</a></li>
+          {% if items.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{items.next_page_number}}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+           {%endif%}
+      </ul>
+    </nav>
+</div>
 </center>
 {% endblock %}
 

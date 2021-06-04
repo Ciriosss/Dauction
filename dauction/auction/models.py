@@ -21,7 +21,7 @@ class Item(models.Model):
     category = models.CharField(choices=CATEGORIES,max_length=15, default='Tecnology')
     name = models.CharField(max_length=30)
     description = models.TextField(max_length=500)
-    image = models.ImageField(null = True, blank = True, upload_to="images/")
+    image = models.ImageField(null = False, blank = True, upload_to="images/")
 
 class Auction(models.Model):
     item = models.OneToOneField(Item, on_delete=models.CASCADE)
@@ -56,3 +56,4 @@ class Comment(models.Model):
     author = models.ForeignKey(Account, on_delete=models.CASCADE)
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
     comment = models.TextField(max_length=500)
+    date = models.DateTimeField(default=now())

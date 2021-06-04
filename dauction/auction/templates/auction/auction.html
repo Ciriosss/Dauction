@@ -8,56 +8,83 @@
 
 {% block content %}
 <br>
+<br>
+
+<div class="container">
+        <div class="accordion" id="accordionSection">
+            <div class="accordion-item mb-3">
+                <h2 class="accordion-header">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseOne"><h4> <font color="#ee0979"> ITEM DETAIL </font></h4></button></h2>
+                <div class="accordion-collapse collapse" id="collapseOne" data-bs-parent="#accordionSection">
+                    <div class="accordion-body">
+                        <div class = "attribute">  Name :  </div><div style = "color : #24252A">  {{auction.item.name}} </div><br> <br>
+                        <div class = "attribute">Description : </div><div style = "color : #24252A">  {{auction.item.description}} </div><br> <br>
+                        {% if auction.item.image%}
+                            <div class = "attribute">Image : </div><br> <img src = "{{auction.item.image.url }}" width="700" height="500"> <br> <br>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            <div class="accordion-item  mb-3">
+                <h2 class="accordion-header">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo"><h4> <font color="#ee0979"> AUCTION </font></h4></button></h2>
+                <div class="accordion-collapse collapse" id="collapseTwo" data-bs-parent="#accordionSection">
+                    <div class="accordion-body">
+                        <div class = "attribute"> Starter Price :  </div><div style = "color : #24252A"> {{auction.starterPrice}} </div><br> <br>
+                        <div class = "attribute"> Publish Date : </div><div style = "color : #24252A">{{auction.published|date:"M d,Y H:m:s"}} </div><br> <br>
+                         <div class = "attribute"  > Expiration Date : </div><div id = "expiration" style = "color : #24252A"> {{auction.expiration|date:"M d,Y H:m:s"}} </div> <br> <br>
+                    </div>
+                </div>
+
+            </div>
+            {% if not auction.is_expired %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree"><h4> <font color="#ee0979"> MAKE A BID </font></h4></button></h2>
+                <div class="accordion-collapse collapse" id="collapseThree" data-bs-parent="#accordionSection">
+                    <div class="accordion-body">
+                        <form method = 'POST'>
+                            {% csrf_token %}
+                            <fieldset class = 'form-group' style = "color : #24252A">
+                                    {{ bidForm|crispy }}
+                            </fieldset>
+                            <br>
+                            <div class="form-group">
+                                <button class="btn btn-outline-info" type="submit">Make a bid</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+<br>
 <h4>
-    <div>
-        <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> ITEM DETAIL </font></h4> </legend>
-           <div class = "attribute">  Name :  </div> {{auction.item.name}} <br> <br>
-           <div class = "attribute">Description : </div> {{auction.item.description}} <br> <br>
-        {% if auction.item.image%}
-            <div class = "attribute">Image : </div><br> <img src = "{{auction.item.image.url }}" width="700" height="500"> <br> <br>
-        {% endif %}
-
-    </div>
 
     <div>
-        <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> AUCTION </font></h4> </legend>
-
-        <div class = "attribute"> Starter Price :  </div> <br> {{auction.starterPrice}} <br> <br>
-        <div class = "attribute"> Publish Date : </div>{{auction.published|date:"M d,Y H:m:s"}} <br> <br>
-        <div class = "attribute"  > Expiration Date : </div><div id = "expiration"> {{auction.expiration|date:"M d,Y H:m:s"}} </div> <br> <br>
-
         <h5>This auction will expire in </h5>
-        <h2><div id = "remaining" class = "blue"> </div> </h2> <br> <br>
+        <h2><div id = "remaining" class = "blue" style = "color : rgba(0, 136, 169, 1)"> </div> </h2> <br> <br>
     </div>
-
-
 
     <div>
 
         {% if not auction.is_expired %}
         <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> BIDS </font></h4> </legend>
-            <form method = 'POST'>
-                {% csrf_token %}
-                <fieldset class = 'form-group'>
-                        {{ bidForm|crispy }}
-                </fieldset>
-                <br>
-                <div class="form-group">
-                    <button class="btn btn-outline-info" type="submit">Make a bid</button>
-                </div>
-            </form>
 
             <table>
             <tr>
-                <th>Address</th>
-                <th>Amount</th>
-                <th>Datetime</th>
+                <th style = "color : rgba(0, 136, 169, 1)">Amount</th>
+                <th style = "color : rgba(0, 136, 169, 1)">Address</th>
+                <th style = "color : rgba(0, 136, 169, 1)">Datetime</th>
             </tr>
 
                 {% for bid in bids %}
                     <tr>
-                        <td> {{ bid.address}} </td>
                         <td> {{ bid.amount}} </td>
+                        <td> {{ bid.address}} </td>
                         <td> {{ bid.date |date:"M d,Y H:m:s"}} </td>
                     </tr>
                 {% endfor %}
@@ -74,6 +101,7 @@
 
     </div>
     <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> COMMENTS </font></h4> </legend>
+        {% if not auction.is_expired %}
             <form method = 'POST'>
                 {% csrf_token %}
                 <fieldset class = 'form-group'>
@@ -84,11 +112,23 @@
                     <button class="btn btn-outline-info" type="submit">Publish comment</button>
                 </div>
             </form>
-
+        {% endif %}
     {% for comment in comments%}
-        <h1>{{comment.author}}</h1>
-        <p>{{comment.comment}}</p>
-    {% endfor %}
+<ul class="list-group mb-3">
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+            <a href="{% url 'accountDetail' pk=comment.author.pk %}" ><h6 class="my-0" style="color : ee0979">{{comment.author}}</h6></a>
+            <small class="text-muted">{{recension.date}}</small>
+        </div>
+        <span class="text-muted"> {{comment.date}}</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+            <h6 class="my-0">{{comment.comment}}</h6>
+        </div>
+    </li>
+</ul>
+{% endfor %}
 
 </h4>
 

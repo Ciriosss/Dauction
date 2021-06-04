@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from account.models import Account, Transaction
 from .blockchain import transferETH, signedAuction
 from .utils import pagination
+from django.http import HttpResponseRedirect
 import hashlib
 import redis
 
@@ -39,7 +40,7 @@ def auction(request, pk):
     auction = Auction.objects.get(item =item)
     bids = Bid.objects.filter(auction = auction).order_by('-date')
     account = request.user
-    comments = Comment.objects.filter(auction = auction)
+    comments = Comment.objects.filter(auction = auction).order_by('-date')
     if request.method == 'POST':
         bidForm = newBid(request.POST)
 
@@ -49,17 +50,17 @@ def auction(request, pk):
             if lastBid:
                 if amount < lastBid.amount:
                     messages.warning(request, 'You have to make a higher offer than the last one')
-                    return redirect('items')
+                    return HttpResponseRedirect(request.path_info)
             else:
                 if amount < auction.starterPrice :
                     messages.warning(request, 'You have to make a higher offer than the last one')
-                    return redirect('items')
+                    return HttpResponseRedirect(request.path_info)
 
             Bid.objects.create(auction=auction, address=account.address, amount=amount)
-            client.rpush(f"{account.address}", f"{amount}")
+            #client.rpush(f"{account.address}", f"{amount}")
 
             messages.success(request, 'Bid correctly registred')
-            return redirect('items')
+            return HttpResponseRedirect(request.path_info)
 
         commentForm = newComment(request.POST)
         if commentForm.is_valid():
@@ -85,8 +86,7 @@ def newAuction(request):
         starterPrice = request.POST.get('starterPrice')
         expiration = request.POST.get('expiration')
         address = request.POST.get('address')
-        image = request.POST.get('image')
-
+        image = request.FILES.get('image')
         seller = Account.objects.get(address = address)
 
         item = Item.objects.create(seller = account, category = category, name = name, description = description, image=image)
@@ -108,13 +108,14 @@ def transactionDetail(request,tx):
 
 
 def auctionsFinished(request):
+    categories = ['Tecnology', 'Clothes', 'Real estate', 'Antiques', 'Sport', 'Other']
     items = []
     auctions = Auction.objects.all()
     for auction in auctions:
         if auction.is_expired() :
             items.append(auction.item)
     items = pagination(request, list=items, num=3)
-    return render(request, 'auction/items.html', {'items':items})
+    return render(request, 'auction/items.html', {'items':items,  'categories':categories})
 
 @background(schedule=60)
 def checkExpiration():

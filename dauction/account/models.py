@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.timezone import now
 from ckeditor.fields import RichTextField
 
 class Account(AbstractUser):
@@ -19,3 +20,4 @@ class Recension(models.Model):
     recension = models.TextField(max_length=500)
     rating = models.IntegerField()
     to = models.ForeignKey(Account,on_delete=models.CASCADE, related_name='to')
+    date = models.DateTimeField(default=now())
