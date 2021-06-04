@@ -44,7 +44,7 @@ def signedAuction(jsonHash):
         nonce = nonce,
         gasPrice = gasPrice,
         gas = 100000,
-        to = '0x89de550dc8371ED5ef99AE687BB98d37C342D89C',
+        to = '0x6D5C772413f1E00C01F5803d970C72397a7A130b',
         value = value,
         data = jsonHash.encode('utf-8')
     ),privateKey)

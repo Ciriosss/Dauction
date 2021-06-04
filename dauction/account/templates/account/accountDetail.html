@@ -43,7 +43,7 @@
     <li class="list-group-item d-flex justify-content-between lh-condensed">
         <div>
             <a href="{% url 'accountDetail' pk=recension.author.pk %}" ><h6 class="my-0" style="color : ee0979">{{recension.author}}</h6></a>
-            <small class="text-muted">{{recension.date}}</small>
+            <small class="text-muted">{{recension.datetime}}</small>
         </div>
         <span class="text-muted"> {{recension.rating}}</span>
     </li>

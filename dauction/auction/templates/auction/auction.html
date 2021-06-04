@@ -85,7 +85,7 @@
                     <tr>
                         <td> {{ bid.amount}} </td>
                         <td> {{ bid.address}} </td>
-                        <td> {{ bid.date |date:"M d,Y H:m:s"}} </td>
+                        <td> {{ bid.datetime |date:"M d,Y H:m:s"}} </td>
                     </tr>
                 {% endfor %}
 
@@ -94,7 +94,11 @@
         <legend class = 'border-bottom mb-4'><h4> <font color="#ee0979"> DATA</font></h4> </legend>
             <div class = "attribute">  Json Result : </div> {{auction.jsonResult}}
         <br> <br>
-            <div class = "attribute">  TxId :  </div> {{auction.txId}} <br> <br>
+            <div class = "attribute">  TxId :  </div> <a href="{% url 'transactionDetail' tx=auction.txId %}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-arrow-up-right-circle-fill" viewBox="0 0 16 16">
+                <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8zm5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707l-4.096 4.096z"/>
+            </svg>
+            </a> {{auction.txId}} <br> <br>
              <br>
              <br>
         {% endif %}
@@ -120,9 +124,8 @@
         <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
                 <a href="{% url 'accountDetail' pk=comment.author.pk %}" ><h6 class="my-0" style="color : ee0979">{{comment.author}}</h6></a>
-                <small class="text-muted">{{recension.date}}</small>
             </div>
-            <span class="text-muted"> {{comment.date}}</span>
+            <span class="text-muted"> {{comment.datetime}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>

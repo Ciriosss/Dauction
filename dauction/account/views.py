@@ -6,6 +6,7 @@ from auction.blockchain import newAccount
 from django.contrib.auth.decorators import login_required
 from auction.blockchain import getBalance
 
+#register view
 def register( request):
 
     if request.method == 'POST':
@@ -19,12 +20,16 @@ def register( request):
         form = AccountRegisterForm()
     return render(request, 'account/register.html', {'form': form})
 
+#profile page
 @login_required(login_url='login')
 def profile(request):
     account = request.user
-    balance = getBalance(account.address)
+    balance = 0
+    if account.address:
+        balance = getBalance(account.address)
     return render(request, 'account/profile.html', {'account': account, 'balance': balance})
 
+#personal page of other user, here people can leave a recension
 def accountDetail(request, pk):
     account = Account.objects.get(pk = pk)
     recensions = Recension.objects.filter(to = account)
@@ -35,6 +40,7 @@ def accountDetail(request, pk):
         Recension.objects.create(author = request.user, recension = recension, rating = rating, to = account)
     return render(request, 'account/accountDetail.html', {'account': account, 'recensions' : recensions})
 
+#view for set up an ethereum account(metamask alternative))
 def setUpAccount(request):
 
     if request.method == 'POST':
@@ -55,6 +61,7 @@ def setUpAccount(request):
         form = SetUpAccount()
     return render(request, 'account/setUpAccount.html', {"form" : form})
 
+#view for change personal bio for users
 def bio(request):
 
     account = request.user

@@ -14,10 +14,12 @@ import redis
 
 client = redis.StrictRedis(host='127.0.0.1', port=6379, password='', db=0)
 
+#home view
 
 def home(request):
     return render(request, "auction/home.html", {})
 
+# view where users can see all items related to a active auction
 def items(request):
     categories =[ 'Tecnology','Clothes' ,'Real estate','Antiques','Sport','Other']
     items = []
@@ -28,52 +30,60 @@ def items(request):
     items = pagination(request, list=items, num = 3)
     return render(request, "auction/items.html", {'items':items, 'categories':categories})
 
+#view that filter items acording category chosen by the user
 def fiterByCategory(request, category):
     categories = ['Tecnology', 'Clothes', 'Real estate', 'Antiques', 'Sport', 'Other']
     items = Item.objects.filter(category = category)
     items = pagination(request, list=items, num = 3)
     return render(request, "auction/items.html", {'items': items, 'categories': categories})
 
+#view for auctions
 @login_required(login_url='login')
 def auction(request, pk):
     item = Item.objects.get(pk = pk)
     auction = Auction.objects.get(item =item)
-    bids = Bid.objects.filter(auction = auction).order_by('-date')
+    bids = Bid.objects.filter(auction = auction).order_by('-datetime')
     account = request.user
-    comments = Comment.objects.filter(auction = auction).order_by('-date')
+    comments = Comment.objects.filter(auction = auction).order_by('-datetime')
+    # bid form
     if request.method == 'POST':
         bidForm = newBid(request.POST)
 
         if bidForm.is_valid():
             amount = bidForm.cleaned_data.get('amount')
             lastBid = Bid.objects.filter(auction = auction).last()
+            # check if the offer is higher than the last one
             if lastBid:
                 if amount < lastBid.amount:
                     messages.warning(request, 'You have to make a higher offer than the last one')
                     return HttpResponseRedirect(request.path_info)
             else:
+                # check if the offer is higher than the initial price
                 if amount < auction.starterPrice :
-                    messages.warning(request, 'You have to make a higher offer than the last one')
+                    messages.warning(request, 'You have to make a higher offer than the starter price')
                     return HttpResponseRedirect(request.path_info)
-
+            #creation of new bid
             Bid.objects.create(auction=auction, address=account.address, amount=amount)
             #client.rpush(f"{account.address}", f"{amount}")
 
             messages.success(request, 'Bid correctly registred')
             return HttpResponseRedirect(request.path_info)
-
+        #form for comments
         commentForm = newComment(request.POST)
         if commentForm.is_valid():
             comment = commentForm.cleaned_data.get('comment')
 
-
             Comment.objects.create(author = account,auction=auction, comment = comment)
             messages.success(request, 'Bid correctly registred')
-            return redirect('items')
+            return HttpResponseRedirect(request.path_info)
     else:
         bidForm = newBid()
         commentForm = newComment()
     return render(request, "auction/auction.html", {'auction': auction, 'bids':bids, 'bidForm':bidForm, 'commentForm':commentForm, 'comments': comments})
+
+
+#form for create a new auction
+#this form require data about item and about auction
 
 @login_required(login_url='login')
 def newAuction(request):
@@ -89,24 +99,31 @@ def newAuction(request):
         image = request.FILES.get('image')
         seller = Account.objects.get(address = address)
 
-        item = Item.objects.create(seller = account, category = category, name = name, description = description, image=image)
-        Auction.objects.create(item = item, starterPrice = starterPrice,expiration = expiration, selleraddress = address, winner = seller)
+        #chack if data is valid
+        try:
+            item = Item.objects.create(seller = account, category = category, name = name, description = description, image=image)
+            Auction.objects.create(item = item, starterPrice = starterPrice,expiration = expiration, selleraddress = address, winner = seller)
+            messages.success(request, 'Auction correctly registred')
+            return redirect('items')
+        except:
 
-        messages.success(request, 'Auction correctly registred')
-        return redirect('items')
+            messages.warning(request, 'Check your data, something went wrong!')
+            return HttpResponseRedirect(request.path_info)
     else:
 
         return render(request, "auction/newAuction.html",{'account':account})
 
+#view for all transactions
 def transactions(request):
-    transactions = Transaction.objects.all().order_by('-date')
+    transactions = Transaction.objects.all().order_by('-datetime')
     return render(request, 'auction/transactions.html', {"transactions": transactions})
 
+#view for one single transaction
 def transactionDetail(request,tx):
     transaction = Transaction.objects.get(tx = tx)
     return render(request, 'auction/transactionDetail.html', {'transaction': transaction})
 
-
+# all auctions expired
 def auctionsFinished(request):
     categories = ['Tecnology', 'Clothes', 'Real estate', 'Antiques', 'Sport', 'Other']
     items = []
@@ -116,6 +133,18 @@ def auctionsFinished(request):
             items.append(auction.item)
     items = pagination(request, list=items, num=3)
     return render(request, 'auction/items.html', {'items':items,  'categories':categories})
+
+
+"""
+ fuctions that in backgroud automaticaly check if some auctions are expirated.
+ 
+ if yes the function 
+ 1) get the winner bid and so the winner
+ 2) make the ETH transaction (from the winner to the seller)
+ 3) assign all values to the json field of the auction
+ 4) calculate the hash of the json field
+ 5) write it in a ETH transaction in my personal ETH ganache blockchain
+ """
 
 @background(schedule=60)
 def checkExpiration():
@@ -131,7 +160,7 @@ def checkExpiration():
 
             publication = str(auction.published)
             expiration = str(auction.expiration)
-            bidDate = str(winnerBid.date)
+            bidDate = str(winnerBid.datetime)
 
             data = {
                 "Auction_id": auction.id,
@@ -151,6 +180,7 @@ def checkExpiration():
             auction.jsonHash = hashlib.sha256(auction.jsonResult.encode('utf-8')).hexdigest()
             auction.txId = signedAuction(auction.jsonHash)
             auction.save()
-
+            adminAddress ='0x6D5C772413f1E00C01F5803d970C72397a7A130b'
+            Transaction.objects.create(addressFrom = adminAddress,addressTo = adminAddress, amount = 0,tx=auction.txId, jsonHash = auction.jsonHash)
 checkExpiration()
 
