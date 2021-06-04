@@ -51,3 +51,8 @@ def signedAuction(jsonHash):
     tx = web3.eth.sendRawTransaction(signedTx.rawTransaction)
     txId = web3.toHex(tx)
     return(txId)
+
+def getBalance(address):
+    wei = web3.eth.getBalance(address)
+    balance = web3.fromWei(wei, 'ether')
+    return round(balance, 4)

@@ -10,7 +10,7 @@
 
                 {% if account.address %}
                     <strong><font color = "black">ADDRESS : </font><font color = "grey">{{account.address}}</font></strong><br>
-                    <strong><font color = "black">ETHER :</font> <font color = "grey"> {{ balanceEth }} ETH </font></strong><br>
+                    <strong><font color = "black">BALANCE :</font> <font color = "grey"> {{ balance }} ETH </font></strong><br>
                     <br>
                     <br>
                     <a href="{% url 'setUpAccount' %}" class="btn btn-primary">Change ethereum account</a>

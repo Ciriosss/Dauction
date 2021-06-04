@@ -4,6 +4,7 @@ from . models import Account, Recension
 from .forms import AccountRegisterForm, SetUpAccount, newBio
 from auction.blockchain import newAccount
 from django.contrib.auth.decorators import login_required
+from auction.blockchain import getBalance
 
 def register( request):
 
@@ -21,7 +22,8 @@ def register( request):
 @login_required(login_url='login')
 def profile(request):
     account = request.user
-    return render(request, 'account/profile.html', {'account': account})
+    balance = getBalance(account.address)
+    return render(request, 'account/profile.html', {'account': account, 'balance': balance})
 
 def accountDetail(request, pk):
     account = Account.objects.get(pk = pk)
