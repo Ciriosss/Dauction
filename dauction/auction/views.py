@@ -7,10 +7,12 @@ import json
 from django.contrib.auth.decorators import login_required
 from account.models import Account, Transaction
 from .blockchain import transferETH, signedAuction
+from .utils import pagination
 import hashlib
 import redis
 
 client = redis.StrictRedis(host='127.0.0.1', port=6379, password='', db=0)
+
 
 def home(request):
     return render(request, "auction/home.html", {})
@@ -22,11 +24,13 @@ def items(request):
     for auction in auctions:
         if not auction.is_expired() :
             items.append(Item.objects.get(id = auction.item.id))
-    return render(request, "auction/items.html", {'items' : items, 'categories':categories})
+    items = pagination(request, list=items, num = 3)
+    return render(request, "auction/items.html", {'items':items, 'categories':categories})
 
 def fiterByCategory(request, category):
     categories = ['Tecnology', 'Clothes', 'Real estate', 'Antiques', 'Sport', 'Other']
     items = Item.objects.filter(category = category)
+    items = pagination(request, list=items, num = 3)
     return render(request, "auction/items.html", {'items': items, 'categories': categories})
 
 @login_required(login_url='login')
@@ -104,12 +108,13 @@ def transactionDetail(request,tx):
 
 
 def auctionsFinished(request):
-    auctionsFinished = []
+    items = []
     auctions = Auction.objects.all()
     for auction in auctions:
         if auction.is_expired() :
-            auctionsFinished.append(auction)
-    return render(request, 'auction/auctionsFinished.html', {'auctionsFinished':auctionsFinished})
+            items.append(auction.item)
+    items = pagination(request, list=items, num=3)
+    return render(request, 'auction/items.html', {'items':items})
 
 @background(schedule=60)
 def checkExpiration():

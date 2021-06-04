@@ -36,15 +36,28 @@
     {% endfor %}
 <br>
   <!-- Pagination -->
-  <div class="w3-center w3-padding-32">
-    <div class="w3-bar">
-      <a class="w3-button w3-black" href="#">1</a>
-      <a class="w3-button w3-hover-black" href="#">2</a>
-      <a class="w3-button w3-hover-black" href="#">3</a>
-      <a class="w3-button w3-hover-black" href="#">4</a>
-      <a class="w3-button w3-hover-black" href="#">5</a>
-      <a class="w3-button w3-hover-black" href="#">»</a>
-    </div>
-  </div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+      {% if items.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{items.previous_page_number}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+      {%endif%}
+    <li class="page-item"><a class="page-link" href="#">{{items.number}}</a></li>
+      {% if items.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{items.next_page_number}}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+       {%endif%}
+  </ul>
+</nav>
 </center>
 {% endblock %}
+
+
