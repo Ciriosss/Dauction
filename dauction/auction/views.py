@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect
 import hashlib
 import redis
 
+#redis connection
 client = redis.StrictRedis(host='127.0.0.1', port=6379, password='', db=0)
 
 #home view
@@ -63,8 +64,10 @@ def auction(request, pk):
                     messages.warning(request, 'You have to make a higher offer than the starter price')
                     return HttpResponseRedirect(request.path_info)
             #creation of new bid
-            Bid.objects.create(auction=auction, address=account.address, amount=amount)
-            client.publish(f"{account.address}", f"{amount}")
+            bid = Bid.objects.create(auction=auction, address=account.address, amount=amount)
+
+            #insering data to redis db
+            client.set(bid.id, "from {} to the auction {} with {} ETH in date:{}".format(bid.address,bid.auction.id, bid.amount, str(bid.datetime) ))
 
             messages.success(request, 'Bid correctly registred')
             return HttpResponseRedirect(request.path_info)
@@ -99,7 +102,7 @@ def newAuction(request):
         image = request.FILES.get('image')
         seller = Account.objects.get(address = address)
 
-        #chack if data is valid
+        #chack if data are valid
         try:
             item = Item.objects.create(seller = account, category = category, name = name, description = description, image=image)
             Auction.objects.create(item = item, starterPrice = starterPrice,expiration = expiration, selleraddress = address, winner = seller)

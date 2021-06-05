@@ -32,7 +32,7 @@ def profile(request):
 #personal page of other user, here people can leave a recension
 def accountDetail(request, pk):
     account = Account.objects.get(pk = pk)
-    recensions = Recension.objects.filter(to = account)
+    recensions = Recension.objects.filter(to = account).order_by('-datetime')
     if request.method == 'POST':
         recension = request.POST.get('recension')
         rating = request.POST.get('rating')
