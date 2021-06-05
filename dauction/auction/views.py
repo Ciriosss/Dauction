@@ -64,7 +64,7 @@ def auction(request, pk):
                     return HttpResponseRedirect(request.path_info)
             #creation of new bid
             Bid.objects.create(auction=auction, address=account.address, amount=amount)
-            #client.rpush(f"{account.address}", f"{amount}")
+            client.publish(f"{account.address}", f"{amount}")
 
             messages.success(request, 'Bid correctly registred')
             return HttpResponseRedirect(request.path_info)
@@ -139,7 +139,7 @@ def auctionsFinished(request):
  fuctions that in backgroud automaticaly check if some auctions are expirated.
  
  if yes the function 
- 1) get the winner bid and so the winner
+ 1) determinate the winner bid and so the winner
  2) make the ETH transaction (from the winner to the seller)
  3) assign all values to the json field of the auction
  4) calculate the hash of the json field
@@ -152,15 +152,24 @@ def checkExpiration():
     for auction in auctions:
         if auction.is_expired():
             winnerBid = Bid.objects.filter(auction=auction).last()
-            address = winnerBid.address
-            auction.winner = Account.objects.get(address=address)
+            if winnerBid:
+                address = winnerBid.address
+                auction.winner = Account.objects.get(address=address)
 
-            tx = transferETH(auction.winner,auction.selleraddress,winnerBid.amount)
-            Transaction.objects.create(addressFrom = auction.winner.address,addressTo = auction.selleraddress, amount = winnerBid.amount,tx=tx )
+                tx = transferETH(auction.winner,auction.selleraddress,winnerBid.amount)
+                Transaction.objects.create(addressFrom = auction.winner.address,addressTo = auction.selleraddress, amount = winnerBid.amount,tx=tx )
+
+
+                bidDate = str(winnerBid.datetime)
+                amount = winnerBid.amount
+
+            else:
+                auction.winner = Account.objects.get(address = auction.selleraddress)
+                bidDate = False
+                amount = auction.starterPrice
 
             publication = str(auction.published)
             expiration = str(auction.expiration)
-            bidDate = str(winnerBid.datetime)
 
             data = {
                 "Auction_id": auction.id,
@@ -172,10 +181,10 @@ def checkExpiration():
                 "Expiration_date": expiration,
                 "Winner": auction.winner.first_name,
                 "Winner_address": auction.winner.address,
-                "Bid_amount": winnerBid.amount,
+                "Bid_amount": amount,
                 "Bid_date": bidDate
-
             }
+
             auction.jsonResult = json.dumps(data)
             auction.jsonHash = hashlib.sha256(auction.jsonResult.encode('utf-8')).hexdigest()
             auction.txId = signedAuction(auction.jsonHash)
