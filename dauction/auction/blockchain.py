@@ -1,9 +1,11 @@
 from web3 import Web3
 
-
+#blockchain connection
 ganache_url = "HTTP://127.0.0.1:7545"
 web3 = Web3(Web3.HTTPProvider(ganache_url))
 
+
+#funcion to get ETHaddress of users using the privatre key
 def newAccount(account,privateKey):
 
    ETHaccount = web3.eth.account.privateKeyToAccount(privateKey)
@@ -12,13 +14,12 @@ def newAccount(account,privateKey):
 
    account.save()
 
+#function to transfer ETH from an account to another
 def transferETH(accountFrom,addressTo,amount):
     str = accountFrom.encrypt
     encrypt = str.replace("\'", "\"")
     privateKey = web3.eth.account.decrypt(encrypt, "start2impact")
     addressFrom = accountFrom.address
-
-
 
     nonce = web3.eth.getTransactionCount(addressFrom)
     tx = {
@@ -33,6 +34,7 @@ def transferETH(accountFrom,addressTo,amount):
     return (web3.toHex(tx_hash))
 
 
+#function to write json hash on the ETH blockchain
 def signedAuction(jsonHash):
 
     address = '0x6D5C772413f1E00C01F5803d970C72397a7A130b'

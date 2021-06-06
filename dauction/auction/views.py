@@ -24,7 +24,7 @@ def home(request):
 def items(request):
     categories =[ 'Tecnology','Clothes' ,'Real estate','Antiques','Sport','Other']
     items = []
-    auctions = Auction.objects.all()
+    auctions = Auction.objects.all().order_by('-published')
     for auction in auctions:
         if not auction.is_expired() :
             items.append(Item.objects.get(id = auction.item.id))
@@ -149,7 +149,7 @@ def auctionsFinished(request):
  5) write it in a ETH transaction in my personal ETH ganache blockchain
  """
 
-@background(schedule=60)
+@background(schedule=10)
 def checkExpiration():
     auctions = Auction.objects.filter(jsonResult = {})
     for auction in auctions:
